@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.UserAgreementMapper">
+    <resultMap id="userAgreementMap" type="com.example.depu.model.UserAgreement">
+        <id column="id" property="id" />
+        <result column="player_id" property="playerId" />
+        <result column="accepted" property="accepted" />
+        <result column="accept_time" property="acceptTime" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="userAgreementMap">
+        SELECT * FROM user_agreement WHERE id = #{id}
+    </select>
+    
+    <select id="selectByPlayerId" resultMap="userAgreementMap">
+        SELECT * FROM user_agreement WHERE player_id = #{playerId}
+    </select>
+    
+    <select id="selectAll" resultMap="userAgreementMap">
+        SELECT * FROM user_agreement
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.UserAgreement">
+        INSERT INTO user_agreement (player_id, accepted, accept_time)
+        VALUES (#{playerId}, #{accepted}, #{acceptTime})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.UserAgreement">
+        UPDATE user_agreement
+        SET player_id = #{playerId},
+            accepted = #{accepted},
+            accept_time = #{acceptTime}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="int">
+        DELETE FROM user_agreement WHERE id = #{id}
+    </delete>
+</mapper>

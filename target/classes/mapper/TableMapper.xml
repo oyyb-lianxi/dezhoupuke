@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.TableMapper">
+    <resultMap id="tableMap" type="com.example.depu.model.Table">
+        <id column="id" property="id" />
+        <result column="max_players" property="maxPlayers" />
+        <result column="min_players_to_start" property="minPlayersToStart" />
+        <result column="small_blind" property="smallBlind" />
+        <result column="big_blind" property="bigBlind" />
+        <result column="blind_limit" property="blindLimit" />
+        <result column="blind_increase_interval" property="blindIncreaseInterval" />
+        <result column="last_blind_increase_time" property="lastBlindIncreaseTime" />
+        <result column="start_time" property="startTime" />
+        <result column="tournament_duration" property="tournamentDuration" />
+        <result column="is_running" property="running" />
+        <result column="is_paused" property="paused" />
+        <result column="pot" property="pot" />
+        <result column="current_bet" property="currentBet" />
+        <result column="status" property="status" />
+        <result column="current_game_id" property="currentGameId" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="tableMap">
+        SELECT * FROM table WHERE id = #{id}
+    </select>
+    
+    <select id="selectAll" resultMap="tableMap">
+        SELECT * FROM table
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.Table">
+        INSERT INTO table (id, max_players, min_players_to_start, small_blind, big_blind, blind_limit, blind_increase_interval, last_blind_increase_time, start_time, tournament_duration, is_running, is_paused, pot, current_bet, status, current_game_id)
+        VALUES (#{id}, #{maxPlayers}, #{minPlayersToStart}, #{smallBlind}, #{bigBlind}, #{blindLimit}, #{blindIncreaseInterval}, #{lastBlindIncreaseTime}, #{startTime}, #{tournamentDuration}, #{running}, #{paused}, #{pot}, #{currentBet}, #{status}, #{currentGameId})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.Table">
+        UPDATE table
+        SET max_players = #{maxPlayers},
+            min_players_to_start = #{minPlayersToStart},
+            small_blind = #{smallBlind},
+            big_blind = #{bigBlind},
+            blind_limit = #{blindLimit},
+            blind_increase_interval = #{blindIncreaseInterval},
+            last_blind_increase_time = #{lastBlindIncreaseTime},
+            start_time = #{startTime},
+            tournament_duration = #{tournamentDuration},
+            is_running = #{running},
+            is_paused = #{paused},
+            pot = #{pot},
+            current_bet = #{currentBet},
+            status = #{status},
+            current_game_id = #{currentGameId}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM table WHERE id = #{id}
+    </delete>
+</mapper>

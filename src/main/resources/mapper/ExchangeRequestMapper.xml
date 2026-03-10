@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.ExchangeRequestMapper">
+    <resultMap id="exchangeRequestMap" type="com.example.depu.model.ExchangeRequest">
+        <id column="id" property="id" />
+        <result column="player_id" property="playerId" />
+        <result column="item_id" property="itemId" />
+        <result column="request_time" property="requestTime" />
+        <result column="process_time" property="processTime" />
+        <result column="status" property="status" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="exchangeRequestMap">
+        SELECT * FROM exchange_request WHERE id = #{id}
+    </select>
+    
+    <select id="selectByPlayerId" resultMap="exchangeRequestMap">
+        SELECT * FROM exchange_request WHERE player_id = #{playerId}
+    </select>
+    
+    <select id="selectAll" resultMap="exchangeRequestMap">
+        SELECT * FROM exchange_request
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.ExchangeRequest">
+        INSERT INTO exchange_request (id, player_id, item_id, request_time, process_time, status)
+        VALUES (#{id}, #{playerId}, #{itemId}, #{requestTime}, #{processTime}, #{status})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.ExchangeRequest">
+        UPDATE exchange_request
+        SET player_id = #{playerId},
+            item_id = #{itemId},
+            request_time = #{requestTime},
+            process_time = #{processTime},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM exchange_request WHERE id = #{id}
+    </delete>
+</mapper>

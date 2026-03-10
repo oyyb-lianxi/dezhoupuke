@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.ExchangeItemMapper">
+    <resultMap id="exchangeItemMap" type="com.example.depu.model.ExchangeItem">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="points" property="points" />
+        <result column="stock" property="stock" />
+        <result column="type" property="type" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="exchangeItemMap">
+        SELECT * FROM exchange_item WHERE id = #{id}
+    </select>
+    
+    <select id="selectAll" resultMap="exchangeItemMap">
+        SELECT * FROM exchange_item
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.ExchangeItem">
+        INSERT INTO exchange_item (id, name, points, stock, type)
+        VALUES (#{id}, #{name}, #{points}, #{stock}, #{type})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.ExchangeItem">
+        UPDATE exchange_item
+        SET name = #{name},
+            points = #{points},
+            stock = #{stock},
+            type = #{type}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM exchange_item WHERE id = #{id}
+    </delete>
+</mapper>

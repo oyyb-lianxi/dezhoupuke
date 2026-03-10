@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>德州扑克积分赛系统</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-gold: #ffd700;
+            --accent-red: #e94560;
+            --accent-green: #2ecc71;
+            --accent-yellow: #f39c12;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: var(--bg-secondary);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #ffed4e;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a4a7a;
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .age-verification {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 193, 7, 0.1);
+            border-radius: var(--border-radius);
+        }
+
+        .age-verification h3 {
+            color: var(--accent-yellow);
+            margin-bottom: 10px;
+        }
+
+        .age-verification p {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .age-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .age-buttons button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">🎮 德州扑克积分赛系统</div>
+        <form>
+            <div class="input-group">
+                <label for="username">账号</label>
+                <input type="text" id="username" placeholder="请输入账号">
+            </div>
+            <div class="input-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" placeholder="请输入密码">
+            </div>
+            <button type="button" class="btn btn-primary login-btn">登录</button>
+        </form>
+        <div class="age-verification">
+            <h3>⚠️ 年龄验证</h3>
+            <p>根据相关规定，您必须年满18周岁才能参与本游戏。</p>
+            <div class="age-buttons">
+                <button class="btn btn-primary">已满18周岁</button>
+                <button class="btn btn-secondary">未满18周岁</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

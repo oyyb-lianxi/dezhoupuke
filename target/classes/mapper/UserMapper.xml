@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.UserMapper">
+    <resultMap id="userMap" type="com.example.depu.model.User">
+        <id column="id" property="id" />
+        <result column="id_card" property="idCard" />
+        <result column="password" property="password" />
+        <result column="name" property="name" />
+        <result column="create_time" property="createTime" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="status" property="status" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="userMap">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+    
+    <select id="selectByIdCard" resultMap="userMap">
+        SELECT * FROM user WHERE id_card = #{idCard}
+    </select>
+    
+    <select id="selectAll" resultMap="userMap">
+        SELECT * FROM user
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.User">
+        INSERT INTO user (id, id_card, password, name, create_time, last_login_time, status)
+        VALUES (#{id}, #{idCard}, #{password}, #{name}, #{createTime}, #{lastLoginTime}, #{status})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.User">
+        UPDATE user
+        SET id_card = #{idCard},
+            password = #{password},
+            name = #{name},
+            create_time = #{createTime},
+            last_login_time = #{lastLoginTime},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+</mapper>

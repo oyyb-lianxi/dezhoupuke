@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.PlayerMapper">
+    <resultMap id="playerMap" type="com.example.depu.model.Player">
+        <id column="id" property="id" />
+        <result column="nickname" property="nickname" />
+        <result column="avatar" property="avatar" />
+        <result column="warehouse_points" property="warehousePoints" />
+        <result column="table_points" property="tablePoints" />
+        <result column="pending_points" property="pendingPoints" />
+        <result column="level_experience" property="levelExperience" />
+        <result column="total_points" property="totalPoints" />
+        <result column="level" property="level" />
+        <result column="is_online" property="online" />
+        <result column="is_spectating" property="spectating" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="registration_time" property="registrationTime" />
+        <result column="is_verified" property="verified" />
+        <result column="age" property="age" />
+        <result column="ip_address" property="ipAddress" />
+        <result column="device_info" property="deviceInfo" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="playerMap">
+        SELECT * FROM player WHERE id = #{id}
+    </select>
+    
+    <select id="selectByUserId" resultMap="playerMap">
+        SELECT * FROM player WHERE user_id = #{userId}
+    </select>
+    
+    <select id="selectAll" resultMap="playerMap">
+        SELECT * FROM player
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.Player">
+        INSERT INTO player (id, nickname, avatar, warehouse_points, table_points, pending_points, level_experience, total_points, level, is_online, is_spectating, last_login_time, registration_time, is_verified, age, ip_address, device_info, user_id)
+        VALUES (#{id}, #{nickname}, #{avatar}, #{warehousePoints}, #{tablePoints}, #{pendingPoints}, #{levelExperience}, #{totalPoints}, #{level}, #{online}, #{spectating}, #{lastLoginTime}, #{registrationTime}, #{verified}, #{age}, #{ipAddress}, #{deviceInfo}, #{userId})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.Player">
+        UPDATE player
+        SET nickname = #{nickname},
+            avatar = #{avatar},
+            warehouse_points = #{warehousePoints},
+            table_points = #{tablePoints},
+            pending_points = #{pendingPoints},
+            level_experience = #{levelExperience},
+            total_points = #{totalPoints},
+            level = #{level},
+            is_online = #{online},
+            is_spectating = #{spectating},
+            last_login_time = #{lastLoginTime},
+            registration_time = #{registrationTime},
+            is_verified = #{verified},
+            age = #{age},
+            ip_address = #{ipAddress},
+            device_info = #{deviceInfo},
+            user_id = #{userId}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM player WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>德州扑克积分赛系统</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-gold: #ffd700;
+            --accent-red: #e94560;
+            --accent-green: #2ecc71;
+            --accent-yellow: #f39c12;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYtMi42ODYgNi02cy0yLjY4Ni02LTYtNi02IDIuNjg2LTYgNiAyLjY4NiA2IDYgNnptMCAzMGMzLjMxNCAwIDYtMi42ODYgNi02cy0yLjY4Ni02LTYtNi02IDIuNjg2LTYgNiAyLjY4NiA2IDYgNnptLTE4IDBjMy4zMTQgMCA2LTIuNjg2IDYtNnMtMi42ODYtNi02LTYtNiAyLjY4Ni02IDYgMi42ODYgNiA2IDZ6bTAgMzBjMy4zMTQgMCA2LTIuNjg2IDYtNnMtMi42ODYtNi02LTYtNiAyLjY4Ni02IDYgMi42ODYgNiA2IDZ6Ii8+PC9nPjwvc3ZnPg==');
+            background-size: 100px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100px 100px;
+            }
+        }
+
+        .login-container {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .logo {
+            text-align: center;
+            color: var(--accent-gold);
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .input {
+            padding: 12px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .password-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .password-input input {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+
+        .checkbox-group a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #ffed4e;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a4a7a;
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .error-message {
+            color: #ff4d4f;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="logo">德州扑克积分赛系统</h1>
+        <div class="login-form">
+            <div class="form-group">
+                <label for="username">账号</label>
+                <input type="text" id="username" class="input" placeholder="手机号/会员号">
+            </div>
+            <div class="form-group">
+                <label for="password">验证码</label>
+                <div class="password-input">
+                    <input type="text" id="password" class="input" placeholder="输入验证码">
+                    <button class="btn btn-secondary" onclick="getVerificationCode()">获取验证码</button>
+                </div>
+            </div>
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="agree">
+                <label for="agree">我已阅读并同意 <a href="#">《用户协议》</a>，且已满18周岁</label>
+            </div>
+            <div id="errorMessage" class="error-message"></div>
+            <button class="btn btn-primary login-btn" onclick="login()" id="loginBtn">进入赛场</button>
+        </div>
+        <div class="login-footer">
+            <p>版本：v1.1</p>
+            <p>未成年人禁止参与</p>
+        </div>
+    </div>
+
+    <script>
+        function getVerificationCode() {
+            alert('验证码已发送到您的手机');
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const agree = document.getElementById('agree').checked;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (!username || !password || !agree) {
+                errorMessage.textContent = '请填写完整信息并同意用户协议';
+                return;
+            }
+
+            loginBtn.innerHTML = '<span>登录中...</span>';
+            loginBtn.disabled = true;
+            errorMessage.textContent = '';
+
+            fetch('/api/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    idCard: username,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 登录成功，保存用户信息
+                    localStorage.setItem('userInfo', JSON.stringify(data));
+                    window.location.href = '/hall';
+                } else {
+                    errorMessage.textContent = data.message || '登录失败';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = '网络错误，请稍后重试';
+                console.error('登录错误:', error);
+            })
+            .finally(() => {
+                loginBtn.innerHTML = '<span>进入赛场</span>';
+                loginBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

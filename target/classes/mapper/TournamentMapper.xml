@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.TournamentMapper">
+    <resultMap id="tournamentMap" type="com.example.depu.model.Tournament">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="max_tables" property="maxTables" />
+        <result column="small_blind" property="smallBlind" />
+        <result column="big_blind" property="bigBlind" />
+        <result column="blind_limit" property="blindLimit" />
+        <result column="is_running" property="running" />
+        <result column="status" property="status" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="tournamentMap">
+        SELECT * FROM tournament WHERE id = #{id}
+    </select>
+    
+    <select id="selectAll" resultMap="tournamentMap">
+        SELECT * FROM tournament
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.Tournament">
+        INSERT INTO tournament (id, name, start_time, end_time, max_tables, small_blind, big_blind, blind_limit, is_running, status)
+        VALUES (#{id}, #{name}, #{startTime}, #{endTime}, #{maxTables}, #{smallBlind}, #{bigBlind}, #{blindLimit}, #{running}, #{status})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.Tournament">
+        UPDATE tournament
+        SET name = #{name},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            max_tables = #{maxTables},
+            small_blind = #{smallBlind},
+            big_blind = #{bigBlind},
+            blind_limit = #{blindLimit},
+            is_running = #{running},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM tournament WHERE id = #{id}
+    </delete>
+</mapper>

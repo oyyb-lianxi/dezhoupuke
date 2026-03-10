@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.PlayerSessionMapper">
+    <resultMap id="playerSessionMap" type="com.example.depu.model.PlayerSession">
+        <id column="id" property="id" />
+        <result column="player_id" property="playerId" />
+        <result column="ip_address" property="ipAddress" />
+        <result column="device_info" property="deviceInfo" />
+        <result column="create_time" property="createTime" />
+        <result column="last_access_time" property="lastAccessTime" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="playerSessionMap">
+        SELECT * FROM player_session WHERE id = #{id}
+    </select>
+    
+    <select id="selectByPlayerId" resultMap="playerSessionMap">
+        SELECT * FROM player_session WHERE player_id = #{playerId}
+    </select>
+    
+    <select id="selectAll" resultMap="playerSessionMap">
+        SELECT * FROM player_session
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.PlayerSession">
+        INSERT INTO player_session (id, player_id, ip_address, device_info, create_time, last_access_time)
+        VALUES (#{id}, #{playerId}, #{ipAddress}, #{deviceInfo}, #{createTime}, #{lastAccessTime})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.PlayerSession">
+        UPDATE player_session
+        SET player_id = #{playerId},
+            ip_address = #{ipAddress},
+            device_info = #{deviceInfo},
+            create_time = #{createTime},
+            last_access_time = #{lastAccessTime}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM player_session WHERE id = #{id}
+    </delete>
+</mapper>

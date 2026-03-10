@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大厅 - 德州扑克积分赛系统</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-gold: #ffd700;
+            --accent-red: #e94560;
+            --accent-green: #2ecc71;
+            --accent-yellow: #f39c12;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .main-hall {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            height: 80px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-level {
+            font-size: 12px;
+            color: var(--accent-gold);
+        }
+
+        .user-points {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .table-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .table-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .table-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .table-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--accent-gold);
+        }
+
+        .table-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .table-players {
+            color: var(--text-secondary);
+        }
+
+        .table-blind {
+            color: var(--accent-gold);
+        }
+
+        .table-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-running {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--accent-green);
+        }
+
+        .status-waiting {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: var(--accent-yellow);
+        }
+
+        .join-btn {
+            padding: 8px 16px;
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            background-color: #ffed4e;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            height: 60px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .footer-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer-btn:hover {
+            color: var(--accent-gold);
+        }
+
+        .footer-btn.active {
+            color: var(--accent-gold);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #ffed4e;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a4a7a;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-hall">
+        <div class="header">
+            <div class="logo">🎮 德州扑克积分赛系统</div>
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-name">赌神小王</div>
+                    <div class="user-level">Lv.5</div>
+                    <div class="user-points">仓库: 85W | 桌面: 15W</div>
+                </div>
+                <img src="https://via.placeholder.com/40" alt="头像" class="user-avatar">
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">桌台列表</h2>
+                    <button class="btn btn-primary">创建桌台</button>
+                </div>
+                <div class="table-list">
+                    <div class="table-card" onclick="joinTable(1)">
+                        <div class="table-name">桌台01</div>
+                        <div class="table-info">
+                            <span class="table-players">6/9 人</span>
+                            <span class="table-blind">盲注 1W/2W</span>
+                        </div>
+                        <div class="table-status">
+                            <span class="status-badge status-running">进行中</span>
+                            <button class="join-btn">加入</button>
+                        </div>
+                    </div>
+                    <div class="table-card" onclick="joinTable(2)">
+                        <div class="table-name">桌台02</div>
+                        <div class="table-info">
+                            <span class="table-players">8/9 人</span>
+                            <span class="table-blind">盲注 2W/4W</span>
+                        </div>
+                        <div class="table-status">
+                            <span class="status-badge status-running">进行中</span>
+                            <button class="join-btn">加入</button>
+                        </div>
+                    </div>
+                    <div class="table-card" onclick="joinTable(3)">
+                        <div class="table-name">桌台03</div>
+                        <div class="table-info">
+                            <span class="table-players">3/9 人</span>
+                            <span class="table-blind">盲注 5000/1W</span>
+                        </div>
+                        <div class="table-status">
+                            <span class="status-badge status-waiting">等待中</span>
+                            <button class="join-btn">加入</button>
+                        </div>
+                    </div>
+                    <div class="table-card" onclick="joinTable(4)">
+                        <div class="table-name">桌台04</div>
+                        <div class="table-info">
+                            <span class="table-players">0/9 人</span>
+                            <span class="table-blind">盲注 5000/1W</span>
+                        </div>
+                        <div class="table-status">
+                            <span class="status-badge status-waiting">等待中</span>
+                            <button class="join-btn">加入</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">快速加入</h2>
+                </div>
+                <div class="table-card" onclick="joinQuickTable()">
+                    <div class="table-name">快速桌台</div>
+                    <div class="table-info">
+                        <span class="table-players">自动分配</span>
+                        <span class="table-blind">根据级别</span>
+                    </div>
+                    <div class="table-status">
+                        <span class="status-badge status-waiting">立即加入</span>
+                        <button class="join-btn">快速加入</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="footer-btn active" onclick="window.location.href='/hall'">
+                <span>🏠</span>
+                <span>大厅</span>
+            </button>
+            <button class="footer-btn" onclick="window.location.href='/leaderboard'">
+                <span>🏆</span>
+                <span>排行榜</span>
+            </button>
+            <button class="footer-btn" onclick="window.location.href='/game'">
+                <span>🃏</span>
+                <span>游戏</span>
+            </button>
+            <button class="footer-btn" onclick="window.location.href='/settings'">
+                <span>⚙️</span>
+                <span>设置</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function joinTable(tableId) {
+            window.location.href = '/game';
+        }
+
+        function joinQuickTable() {
+            window.location.href = '/game';
+        }
+    </script>
+</body>
+</html>

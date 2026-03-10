@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.depu.mapper.GameMapper">
+    <resultMap id="gameMap" type="com.example.depu.model.Game">
+        <id column="id" property="id" />
+        <result column="table_id" property="tableId" />
+        <result column="pot" property="pot" />
+        <result column="current_bet" property="currentBet" />
+        <result column="dealer_position" property="dealerPosition" />
+        <result column="current_player_index" property="currentPlayerIndex" />
+        <result column="round" property="round" />
+        <result column="winner_id" property="winnerId" />
+        <result column="is_complete" property="complete" />
+        <result column="state" property="state" />
+    </resultMap>
+    
+    <select id="selectById" resultMap="gameMap">
+        SELECT * FROM game WHERE id = #{id}
+    </select>
+    
+    <select id="selectByTableId" resultMap="gameMap">
+        SELECT * FROM game WHERE table_id = #{tableId}
+    </select>
+    
+    <select id="selectAll" resultMap="gameMap">
+        SELECT * FROM game
+    </select>
+    
+    <insert id="insert" parameterType="com.example.depu.model.Game">
+        INSERT INTO game (id, table_id, pot, current_bet, dealer_position, current_player_index, round, winner_id, is_complete, state)
+        VALUES (#{id}, #{tableId}, #{pot}, #{currentBet}, #{dealerPosition}, #{currentPlayerIndex}, #{round}, #{winnerId}, #{complete}, #{state})
+    </insert>
+    
+    <update id="update" parameterType="com.example.depu.model.Game">
+        UPDATE game
+        SET table_id = #{tableId},
+            pot = #{pot},
+            current_bet = #{currentBet},
+            dealer_position = #{dealerPosition},
+            current_player_index = #{currentPlayerIndex},
+            round = #{round},
+            winner_id = #{winnerId},
+            is_complete = #{complete},
+            state = #{state}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="String">
+        DELETE FROM game WHERE id = #{id}
+    </delete>
+</mapper>

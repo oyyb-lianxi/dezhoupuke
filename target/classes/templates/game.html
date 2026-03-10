@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏桌 - 德州扑克积分赛系统</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-gold: #ffd700;
+            --accent-red: #e94560;
+            --accent-green: #2ecc71;
+            --accent-yellow: #f39c12;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .game-table {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-primary);
+            position: relative;
+        }
+
+        .top-info-bar {
+            height: 80px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .back-btn {
+            font-size: 18px;
+        }
+
+        .table-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .blind-info {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .blind-countdown {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .menu-btn {
+            font-size: 18px;
+        }
+
+        .table-area {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 20px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .seat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .seat-1 {
+            grid-column: 3;
+            grid-row: 5;
+        }
+
+        .seat-2 {
+            grid-column: 2;
+            grid-row: 4;
+        }
+
+        .seat-3 {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        .seat-4 {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .seat-5 {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        .seat-6 {
+            grid-column: 4;
+            grid-row: 2;
+        }
+
+        .seat-7 {
+            grid-column: 5;
+            grid-row: 3;
+        }
+
+        .seat-8 {
+            grid-column: 4;
+            grid-row: 4;
+        }
+
+        .seat-9 {
+            grid-column: 3;
+            grid-row: 5;
+        }
+
+        .seat-content {
+            width: 120px;
+            height: 150px;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .seat.current-player .seat-content {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .seat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .seat-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .seat-me {
+            color: var(--accent-gold);
+            font-size: 12px;
+        }
+
+        .seat-chips {
+            font-size: 14px;
+            color: var(--accent-gold);
+            margin-bottom: 5px;
+        }
+
+        .seat-dealer {
+            font-size: 12px;
+            color: var(--accent-green);
+            background-color: var(--bg-tertiary);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .seat-status {
+            font-size: 12px;
+            color: var(--accent-red);
+            margin-top: 5px;
+        }
+
+        .pending-points {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--accent-yellow);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .community-cards {
+            grid-column: 2 / 5;
+            grid-row: 2 / 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .cards {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            width: 80px;
+            height: 120px;
+            background-color: white;
+            color: black;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-back {
+            background: linear-gradient(45deg, #0f3460, #16213e);
+            color: white;
+        }
+
+        .pot {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .bottom-action-area {
+            height: 200px;
+            background-color: var(--bg-secondary);
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .player-cards {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-countdown {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .countdown-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--accent-red) 0% var(--progress),
+                var(--accent-yellow) var(--progress) 60%,
+                var(--accent-gold) 60% 100%
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .countdown-circle::before {
+            content: '';
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+        }
+
+        .countdown-number {
+            position: relative;
+            z-index: 1;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn {
+            flex: 1;
+        }
+
+        .bet-area {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bet-input {
+            flex: 1;
+        }
+
+        .quick-bet {
+            display: flex;
+            gap: 10px;
+        }
+
+        .quick-bet-btn {
+            flex: 1;
+        }
+
+        .side-panel {
+            position: absolute;
+            top: 80px;
+            right: 0;
+            width: 300px;
+            height: calc(100vh - 280px);
+            background-color: var(--bg-secondary);
+            border-left: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 100;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .panel-header h3 {
+            color: var(--accent-gold);
+        }
+
+        .panel-content {
+            padding: 15px;
+            overflow-y: auto;
+            height: calc(100% - 60px);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item {
+            padding: 10px;
+            background-color: var(--bg-tertiary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .history-item.active {
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .spectator-mode {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 26, 46, 0.95);
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+        }
+
+        .spectator-header {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-gold);
+        }
+
+        .spectator-header h2 {
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .spectator-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .spectator-cards {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .spectator-players {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .spectator-player {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--bg-tertiary);
+            border-radius: var(--border-radius);
+        }
+
+        .spectator-log {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .spectator-log h4 {
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .spectator-footer {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid var(--accent-gold);
+        }
+
+        .spectator-footer button {
+            flex: 1;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--accent-gold);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .warning-text {
+            color: var(--accent-yellow);
+            margin: 10px 0;
+        }
+
+        .countdown-text {
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        /* 异常状态UI */
+        .network-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--accent-red);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        .maintenance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .maintenance-content {
+            background-color: var(--bg-secondary);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .maintenance-content h2 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        .maintenance-content p {
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+
+        .blind-cap-warning {
+            background-color: var(--accent-yellow);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 动画效果 */
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* 倒计时视觉效果增强 */
+        .action-countdown.danger .countdown-circle {
+            animation: pulse 1s infinite;
+        }
+
+        .action-countdown.danger .countdown-number {
+            font-size: 28px;
+            color: var(--accent-red);
+        }
+
+        /* 超时按钮样式 */
+        .action-btn:disabled {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #ffed4e;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a4a7a;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--accent-red);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .input {
+            padding: 10px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+        }
+
+        .danger {
+            color: var(--accent-red);
+        }
+
+        .warning {
+            color: var(--accent-yellow);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-table">
+        <!-- 异常状态UI -->
+        <!-- 网络断开横幅 -->
+        <div class="network-banner" style="display: none;">
+            网络异常，正在重连...
+        </div>
+
+        <!-- 服务器维护遮罩 -->
+        <div class="maintenance-overlay" style="display: none;">
+            <div class="maintenance-content">
+                <h2>系统维护中</h2>
+                <p>预计10分钟后恢复</p>
+            </div>
+        </div>
+
+        <!-- 顶部信息栏 -->
+        <div class="top-info-bar">
+            <button class="btn btn-secondary back-btn" onclick="window.location.href='/hall'">← 返回</button>
+            <span class="table-name">桌台02</span>
+            <span class="countdown">54:00</span>
+            <span class="blind-info">💰 盲注2W/4W</span>
+            <span class="blind-cap-warning" style="display: none;">已达最大盲注，不再上涨</span>
+            <span class="blind-countdown">07:23</span>
+            <button class="btn btn-secondary menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <!-- 牌桌区域 -->
+        <div class="table-area">
+            <!-- 座位布局 -->
+            <div class="seat seat-5">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家5</div>
+                    <div class="seat-chips">💰 100W</div>
+                </div>
+            </div>
+
+            <div class="seat seat-4">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家4</div>
+                    <div class="seat-chips">💰 80W</div>
+                </div>
+            </div>
+
+            <div class="seat seat-6">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家6</div>
+                    <div class="seat-chips">💰 150W</div>
+                </div>
+            </div>
+
+            <div class="seat seat-3">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家3</div>
+                    <div class="seat-chips">💰 0</div>
+                    <div class="seat-status">已弃牌</div>
+                </div>
+            </div>
+
+            <div class="seat seat-7">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家7</div>
+                    <div class="seat-chips">💰 200W</div>
+                </div>
+            </div>
+
+            <div class="seat seat-2">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家2</div>
+                    <div class="seat-chips">💰 50W</div>
+                </div>
+            </div>
+
+            <div class="seat seat-8">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家8</div>
+                    <div class="seat-chips">💰 120W</div>
+                </div>
+            </div>
+
+            <div class="seat seat-1">
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">玩家1</div>
+                    <div class="seat-chips">💰 90W</div>
+                </div>
+            </div>
+
+            <!-- 公共牌区 -->
+            <div class="community-cards">
+                <div class="cards">
+                    <div class="card">♠️A</div>
+                    <div class="card">♥️K</div>
+                    <div class="card">♦️Q</div>
+                    <div class="card card-back">?</div>
+                    <div class="card card-back">?</div>
+                </div>
+                <div class="pot">底池: 86W</div>
+            </div>
+
+            <!-- 自己的座位 -->
+            <div class="seat seat-9 current-player">
+                <div class="pending-points">+20W(下局生效)</div>
+                <div class="seat-content">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="seat-avatar">
+                    <div class="seat-name">赌神小王 <span class="seat-me">(我)</span></div>
+                    <div class="seat-chips">💰 125W</div>
+                    <div class="seat-dealer">dealer</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部操作区 -->
+        <div class="bottom-action-area">
+            <!-- 手牌 -->
+            <div class="player-cards">
+                <div class="card">♠️A</div>
+                <div class="card">♥️A</div>
+            </div>
+
+            <!-- 倒计时 -->
+            <div class="action-countdown">
+                <div class="countdown-circle" style="--progress: 100%"></div>
+                <div class="countdown-number">10</div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+                <button class="btn btn-danger action-btn" onclick="fold()">弃牌</button>
+                <button class="btn btn-secondary action-btn" onclick="check()">过牌 (10s)</button>
+                <div class="bet-area">
+                    <input type="number" value="2" class="input bet-input" min="2" max="125">
+                    <span class="bet-unit">W</span>
+                </div>
+                <button class="btn btn-primary action-btn" onclick="allIn()">All-in 125W</button>
+            </div>
+
+            <!-- 快捷下注 -->
+            <div class="quick-bet">
+                <button class="btn btn-secondary quick-bet-btn" onclick="setBet(43)">1/2底池</button>
+                <button class="btn btn-secondary quick-bet-btn" onclick="setBet(86)">底池</button>
+                <button class="btn btn-secondary quick-bet-btn" onclick="setBet(172)">2x底池</button>
+                <button class="btn btn-secondary quick-bet-btn" onclick="allIn()">All-in</button>
+            </div>
+        </div>
+
+        <!-- 侧边面板 -->
+        <div class="side-panel">
+            <div class="panel-header">
+                <button class="btn btn-secondary panel-toggle" onclick="toggleSidePanel()">☰</button>
+                <h3>本局历史</h3>
+            </div>
+            <div class="panel-content">
+                <div class="history-list">
+                    <div class="history-item active" onclick="showHistoryDetail(5)">第5手 [查看]</div>
+                    <div class="history-item" onclick="showHistoryDetail(4)">第4手 [查看]</div>
+                    <div class="history-item" onclick="showHistoryDetail(3)">第3手 [查看]</div>
+                    <div class="history-item" onclick="showHistoryDetail(2)">第2手 [查看]</div>
+                    <div class="history-item" onclick="showHistoryDetail(1)">第1手 [查看]</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 离开桌台弹窗 -->
+        <div class="modal" id="leaveModal" style="display: none;">
+            <div class="modal-content">
+                <h3>确定离开当前桌台？</h3>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="leaveTable()">确定</button>
+                    <button class="btn btn-secondary" onclick="closeLeaveModal()">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- All-in确认弹窗 -->
+        <div class="modal" id="allInModal" style="display: none;">
+            <div class="modal-content">
+                <h3>⚠️ 确认全下？</h3>
+                <p>您将下注全部 125W 积分</p>
+                <p>确定后不可撤销</p>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="confirmAllIn()">确定</button>
+                    <button class="btn btn-secondary" onclick="closeAllInModal()">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 补分弹窗 -->
+        <div class="modal" id="addPointsModal" style="display: none;">
+            <div class="modal-content">
+                <h3>补充积分</h3>
+                <p>当前仓库: 85W</p>
+                <p>当前桌面: 15W</p>
+                <div class="input-group">
+                    <label>补充数量:</label>
+                    <input type="number" value="40" class="input" min="40" max="85">
+                    <span>W</span>
+                </div>
+                <button class="btn btn-secondary" onclick="setMaximumAddPoints()">一键填入最大值: 85W</button>
+                <p class="warning-text">⚠️ 将从仓库扣除，下局生效</p>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="confirmAddPoints()">确认</button>
+                    <button class="btn btn-secondary" onclick="closeAddPointsModal()">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 涨盲提醒弹窗 -->
+        <div class="modal" id="blindIncreaseModal" style="display: none;">
+            <div class="modal-content">
+                <h3>📢 盲注升级</h3>
+                <p>小盲: 2W → 4W</p>
+                <p>大盲: 4W → 8W</p>
+                <p class="countdown-text">(3秒后自动关闭)</p>
+            </div>
+        </div>
+
+        <!-- 亮牌选择弹窗 -->
+        <div class="modal" id="showCardsModal" style="display: none;">
+            <div class="modal-content">
+                <h3>🎉 您赢得了本手牌！ 底池: +120W</h3>
+                <p>您的手牌: ♠️A ♥️A (三条A)</p>
+                <p>是否向其他玩家展示您的手牌？</p>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="showCards()">亮牌展示</button>
+                    <button class="btn btn-secondary" onclick="hideCards()">保持神秘</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 被踢出桌台弹窗 -->
+        <div class="modal" id="kickedOutModal" style="display: none;">
+            <div class="modal-content">
+                <h3>⚠️ 您已被管理员请离当前桌台</h3>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="goToHall()">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 账号在其他地方登录弹窗 -->
+        <div class="modal" id="accountLoggedInElsewhereModal" style="display: none;">
+            <div class="modal-content">
+                <h3>⚠️ 账号已在其他地方登录</h3>
+                <p>您将被强制退出游戏</p>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="logout()">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 观战模式 -->
+        <div class="spectator-mode" id="spectatorMode" style="display: none;">
+            <div class="spectator-header">
+                <h2>👁️ 观战模式</h2>
+                <p>您已被淘汰，本手牌结束后可重新加入</p>
+                <p>当前手牌剩余玩家: 6人 底池: 156W</p>
+            </div>
+            <div class="spectator-content">
+                <div class="spectator-cards">
+                    <p>公共牌: ♠️A ♥️K ♦️Q</p>
+                    <p>等待转牌...</p>
+                </div>
+                <div class="spectator-players">
+                    <div class="spectator-player">
+                        <span>?? ??</span>
+                        <span>玩家1</span>
+                        <span>💰100W</span>
+                    </div>
+                    <div class="spectator-player">
+                        <span>?? ??</span>
+                        <span>玩家2</span>
+                        <span>💰80W</span>
+                    </div>
+                    <div class="spectator-player">
+                        <span>?? ??</span>
+                        <span>玩家3</span>
+                        <span>💰0</span>
+                    </div>
+                    <div class="spectator-player">
+                        <span>?? ??</span>
+                        <span>玩家4</span>
+                        <span>💰150W</span>
+                    </div>
+                    <div class="spectator-player">
+                        <span>?? ??</span>
+                        <span>玩家5</span>
+                        <span>💰200W</span>
+                    </div>
+                    <div class="spectator-player">
+                        <span>?? ??</span>
+                        <span>玩家6</span>
+                        <span>💰50W</span>
+                    </div>
+                </div>
+                <div class="spectator-log">
+                    <h4>操作日志</h4>
+                    <p>14:32:15 玩家A 下注 10W</p>
+                    <p>14:32:08 玩家B 弃牌</p>
+                </div>
+            </div>
+            <div class="spectator-footer">
+                <button class="btn btn-secondary" onclick="viewHistory()">查看历史记录(仅看公共牌)</button>
+                <button class="btn btn-primary" onclick="rejoin()">立即重进(倒计时)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 状态管理
+        let showLeaveModalFlag = false;
+        let showAllInModal = false;
+        let showAddPointsModal = false;
+        let showBlindIncreaseModal = false;
+        let showShowCardsModal = false;
+        let showKickedOutModal = false;
+        let showAccountLoggedInElsewhereModal = false;
+        let showSidePanel = true;
+        let isSpectating = false;
+        let isNetworkDisconnected = false;
+        let isServerMaintenance = false;
+        let isBlindCapReached = false;
+
+        // 倒计时
+        let tournamentTime = 3240; // 54分钟
+        let blindTime = 443; // 7分23秒
+        let actionTime = 10;
+
+        // 下注金额
+        let betAmount = 2;
+        let addPointsAmount = 40;
+
+        // 定时器
+        let tournamentTimer = null;
+        let blindTimer = null;
+        let actionTimer = null;
+        let blindIncreaseTimer = null;
+
+        // 格式化时间
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // 切换侧边面板
+        function toggleSidePanel() {
+            const panelContent = document.querySelector('.panel-content');
+            showSidePanel = !showSidePanel;
+            panelContent.style.display = showSidePanel ? 'block' : 'none';
+        }
+
+        // 显示离开弹窗
+        function showLeaveModal() {
+            document.getElementById('leaveModal').style.display = 'flex';
+        }
+
+        // 关闭离开弹窗
+        function closeLeaveModal() {
+            document.getElementById('leaveModal').style.display = 'none';
+        }
+
+        // 离开桌台
+        function leaveTable() {
+            window.location.href = '/hall';
+        }
+
+        // 弃牌
+        function fold() {
+            // 模拟弃牌操作
+            alert('您已弃牌');
+            resetActionTimer();
+        }
+
+        // 过牌
+        function check() {
+            // 模拟过牌操作
+            alert('您已过牌');
+            resetActionTimer();
+        }
+
+        // 全下
+        function allIn() {
+            document.getElementById('allInModal').style.display = 'flex';
+        }
+
+        // 确认全下
+        function confirmAllIn() {
+            // 模拟全下操作
+            alert('您已全下');
+            document.getElementById('allInModal').style.display = 'none';
+            resetActionTimer();
+        }
+
+        // 关闭全下弹窗
+        function closeAllInModal() {
+            document.getElementById('allInModal').style.display = 'none';
+        }
+
+        // 设置下注金额
+        function setBet(amount) {
+            betAmount = amount;
+            document.querySelector('.bet-input').value = amount;
+        }
+
+        // 显示补分弹窗
+        function showAddPoints() {
+            document.getElementById('addPointsModal').style.display = 'flex';
+        }
+
+        // 关闭补分弹窗
+        function closeAddPointsModal() {
+            document.getElementById('addPointsModal').style.display = 'none';
+        }
+
+        // 设置最大补分
+        function setMaximumAddPoints() {
+            addPointsAmount = 85;
+            document.querySelector('#addPointsModal .input').value = 85;
+        }
+
+        // 确认补分
+        function confirmAddPoints() {
+            // 模拟补分操作
+            alert(`您已成功补分 ${addPointsAmount}W`);
+            document.getElementById('addPointsModal').style.display = 'none';
+        }
+
+        // 显示历史详情
+        function showHistoryDetail(hand) {
+            // 模拟显示历史详情
+            alert(`显示第${hand}手历史详情`);
+        }
+
+        // 亮牌
+        function showCards() {
+            // 模拟亮牌操作
+            alert('您已选择亮牌');
+            document.getElementById('showCardsModal').style.display = 'none';
+        }
+
+        // 保持神秘
+        function hideCards() {
+            // 模拟不亮牌操作
+            alert('您已选择保持神秘');
+            document.getElementById('showCardsModal').style.display = 'none';
+        }
+
+        // 查看历史记录
+        function viewHistory() {
+            // 模拟查看历史记录
+            alert('查看历史记录');
+        }
+
+        // 重新加入
+        function rejoin() {
+            // 模拟重新加入
+            isSpectating = false;
+            document.getElementById('spectatorMode').style.display = 'none';
+            alert('您已重新加入比赛');
+        }
+
+        // 切换菜单
+        function toggleMenu() {
+            // 模拟切换菜单
+            alert('菜单已切换');
+        }
+
+        // 前往大厅
+        function goToHall() {
+            window.location.href = '/hall';
+        }
+
+        // 退出登录
+        function logout() {
+            window.location.href = '/';
+        }
+
+        // 重置操作定时器
+        function resetActionTimer() {
+            if (actionTimer) {
+                clearInterval(actionTimer);
+            }
+            actionTime = 10;
+            startActionTimer();
+        }
+
+        // 开始操作定时器
+        function startActionTimer() {
+            actionTimer = setInterval(() => {
+                if (actionTime > 0) {
+                    actionTime--;
+                    updateActionCountdown();
+                } else {
+                    // 超时处理
+                    clearInterval(actionTimer);
+                    alert('已自动过牌');
+                    actionTime = 10;
+                    startActionTimer();
+                }
+            }, 1000);
+        }
+
+        // 更新操作倒计时
+        function updateActionCountdown() {
+            const countdownNumber = document.querySelector('.countdown-number');
+            const countdownCircle = document.querySelector('.countdown-circle');
+            const actionCountdown = document.querySelector('.action-countdown');
+            
+            countdownNumber.textContent = actionTime;
+            countdownCircle.style.setProperty('--progress', (actionTime / 10) * 100 + '%');
+            
+            // 最后5秒变红放大闪烁
+            if (actionTime < 5) {
+                actionCountdown.classList.add('danger');
+            } else {
+                actionCountdown.classList.remove('danger');
+            }
+        }
+
+        // 开始赛事定时器
+        function startTournamentTimer() {
+            tournamentTimer = setInterval(() => {
+                if (tournamentTime > 0) {
+                    tournamentTime--;
+                    document.querySelector('.countdown').textContent = formatTime(tournamentTime);
+                } else {
+                    clearInterval(tournamentTimer);
+                    alert('比赛时间结束');
+                }
+            }, 1000);
+        }
+
+        // 开始盲注定时器
+        function startBlindTimer() {
+            blindTimer = setInterval(() => {
+                if (blindTime > 0) {
+                    blindTime--;
+                    document.querySelector('.blind-countdown').textContent = formatTime(blindTime);
+                } else {
+                    clearInterval(blindTimer);
+                    // 涨盲
+                    document.getElementById('blindIncreaseModal').style.display = 'flex';
+                    // 3秒后关闭弹窗
+                    blindIncreaseTimer = setTimeout(() => {
+                        document.getElementById('blindIncreaseModal').style.display = 'none';
+                        blindTime = 600; // 10分钟
+                        startBlindTimer();
+                    }, 3000);
+                }
+            }, 1000);
+        }
+
+        // 页面加载完成后启动定时器
+        window.onload = function() {
+            startTournamentTimer();
+            startBlindTimer();
+            startActionTimer();
+        };
+    </script>
+</body>
+</html>
